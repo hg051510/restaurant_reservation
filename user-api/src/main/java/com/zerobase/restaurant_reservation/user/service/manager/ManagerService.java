@@ -1,0 +1,23 @@
+package com.zerobase.restaurant_reservation.user.service.manager;
+
+import com.zerobase.restaurant_reservation.user.domain.model.Manager;
+import com.zerobase.restaurant_reservation.user.domain.repository.ManagerRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class ManagerService {
+    private final ManagerRepository managerRepository;
+
+    public Optional<Manager> findByIdAndEmail(Long id, String email) {
+        return managerRepository.findByIdAndEmail(id, email);
+    }
+
+    public Optional<Manager> findValidSeller(String email, String password) {
+        return managerRepository.findByEmailAndPasswordAndVerifyIsTrue(email, password);
+    }
+
+}
