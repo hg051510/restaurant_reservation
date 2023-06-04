@@ -8,9 +8,11 @@ import java.util.Optional;
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Optional<Manager> findByIdAndEmail(Long id, String email);
 
+    Optional<Manager> findByEmailAndPassword(String email, String password);
+
     Optional<Manager> findByEmailAndPasswordAndVerifyIsTrue(String email, String password);
 
-    Optional<Manager> findByEmailAndPasswordAndVerifyIsTrueAnd(String email, String password);
+    Optional<Manager> findByEmailAndPasswordAndPartnerVerifyIsTrue(String email, String password);
 
     Optional<Manager> findByEmail(String email);
 }

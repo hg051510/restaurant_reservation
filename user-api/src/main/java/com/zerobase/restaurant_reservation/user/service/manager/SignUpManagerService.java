@@ -1,5 +1,6 @@
 package com.zerobase.restaurant_reservation.user.service.manager;
 
+import com.zerobase.restaurant_reservation.user.domain.SignInForm;
 import com.zerobase.restaurant_reservation.user.domain.SignUpForm;
 import com.zerobase.restaurant_reservation.user.domain.model.Manager;
 import com.zerobase.restaurant_reservation.user.domain.repository.ManagerRepository;
@@ -25,6 +26,23 @@ public class SignUpManagerService {
         return managerRepository.findByEmail(email).isPresent();
     }
 
+    public boolean isPartner(String email, String password){
+        return managerRepository.findByEmailAndPasswordAndPartnerVerifyIsTrue(email, password).isPresent();
+    }
+
+    @Transactional
+    public void changeManagerPartnerVerify(SignInForm form){
+        Optional<Manager> managerOptional =
+                managerRepository.findByEmailAndPassword(form.getEmail(), form.getPassword());
+
+        if(managerOptional.isPresent()){
+            Manager manager = managerOptional.get();
+            manager.setPartnerVerify(true);
+        }else{
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+    }
+
     @Transactional
     public void verifyEmail(String email, String code) {
         Manager manager = managerRepository.findByEmail(email)
@@ -40,11 +58,11 @@ public class SignUpManagerService {
     }
 
     @Transactional
-    public LocalDateTime changeManagerValidateEmail(Long customerId, String verificationCode) {
-        Optional<Manager> sellerOptional = managerRepository.findById(customerId);
+    public LocalDateTime changeManagerValidateEmail(Long managerId, String verificationCode) {
+        Optional<Manager> managerOptional = managerRepository.findById(managerId);
 
-        if (sellerOptional.isPresent()) {
-            Manager manager = sellerOptional.get();
+        if (managerOptional.isPresent()) {
+            Manager manager = managerOptional.get();
             manager.setVerificationCode(verificationCode);
             manager.setVerifyExpiredAt(LocalDateTime.now().plusDays(1));
 

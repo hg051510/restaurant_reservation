@@ -2,6 +2,7 @@ package com.zerobase.restaurant_reservation.user.application;
 
 import com.zerobase.restaurant_reservation.user.client.MailgunClient;
 import com.zerobase.restaurant_reservation.user.client.mailgun.SendMailForm;
+import com.zerobase.restaurant_reservation.user.domain.SignInForm;
 import com.zerobase.restaurant_reservation.user.domain.SignUpForm;
 import com.zerobase.restaurant_reservation.user.domain.model.Customer;
 import com.zerobase.restaurant_reservation.user.domain.model.Manager;
@@ -58,18 +59,32 @@ public class SignUpApplication {
         if (signUpManagerService.isEmailExist(form.getEmail())) {
             throw new CustomException(ErrorCode.ALREADY_REGISTERED_USER);
         } else {
-            Manager s = signUpManagerService.signUp(form);
+            Manager m = signUpManagerService.signUp(form);
 
             String code = getRandomCode();
             SendMailForm sendMailForm = SendMailForm.builder()
                     .from("test@zerobase.com")
                     .to(form.getEmail())
                     .subject("Verification Email!")
-                    .text(getVerificationEmailBody(s.getEmail(), s.getName(), "manager", code))
+                    .text(getVerificationEmailBody(m.getEmail(), m.getName(), "manager", code))
                     .build();
             log.info("Send email result : " + mailgunClient.sendEmail(sendMailForm).getBody());
-            signUpManagerService.changeManagerValidateEmail(s.getId(), code);
+            signUpManagerService.changeManagerValidateEmail(m.getId(), code);
             return "회원 가입에 성공하셨습니다.";
+        }
+    }
+
+    public String managerPartnerSignUp(SignInForm form){
+        if(!signUpManagerService.isEmailExist(form.getEmail())){
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        if(signUpManagerService.isPartner(form.getEmail(), form.getPassword())){
+            throw new CustomException(ErrorCode.ALREADY_PARTNER);
+        }else{
+            signUpManagerService.changeManagerPartnerVerify(form);
+
+            return "파트너 가입에 성공하셨습니다.";
         }
     }
 
