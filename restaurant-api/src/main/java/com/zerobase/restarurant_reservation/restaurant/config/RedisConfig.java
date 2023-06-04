@@ -25,5 +25,3 @@ public class RedisConfig {
         return redisTemplate;
     }
 }
-
-// todo : 매장 api 시작하기 
