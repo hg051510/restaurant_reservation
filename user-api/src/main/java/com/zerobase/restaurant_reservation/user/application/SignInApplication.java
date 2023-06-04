@@ -32,7 +32,7 @@ public class SignInApplication {
 
     public String managerLoginToken(SignInForm form){
         // 1. 로그인 가능 여부
-        Manager s = managerService.findValidSeller(form.getEmail(), form.getPassword())
+        Manager s = managerService.findValidManager(form.getEmail(), form.getPassword())
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_CHECK_FAIL));
         // 2. 토큰을 발행하고
 

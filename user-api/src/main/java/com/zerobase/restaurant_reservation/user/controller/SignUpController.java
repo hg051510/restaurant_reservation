@@ -1,6 +1,7 @@
 package com.zerobase.restaurant_reservation.user.controller;
 
 import com.zerobase.restaurant_reservation.user.application.SignUpApplication;
+import com.zerobase.restaurant_reservation.user.domain.SignInForm;
 import com.zerobase.restaurant_reservation.user.domain.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,14 @@ public class SignUpController {
     }
 
     @GetMapping("/manager/verify")
-    public ResponseEntity<String> verifySeller(String email, String code) {
+    public ResponseEntity<String> verifyManager(String email, String code) {
         signUpApplication.managerVerify(email, code);
         return ResponseEntity.ok("인증이 완료되었습니다.");
     }
 
-
-
+    @PostMapping("/manager/partner")
+    public ResponseEntity<String> managerPartnerSignUp(@RequestBody SignInForm form){
+        signUpApplication.managerPartnerSignUp(form);
+        return ResponseEntity.ok("파트너 가입이 완료되었습니다.");
+    }
 }

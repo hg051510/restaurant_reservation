@@ -16,7 +16,7 @@ public class ManagerService {
         return managerRepository.findByIdAndEmail(id, email);
     }
 
-    public Optional<Manager> findValidSeller(String email, String password) {
+    public Optional<Manager> findValidManager(String email, String password) {
         return managerRepository.findByEmailAndPasswordAndVerifyIsTrue(email, password);
     }
 
