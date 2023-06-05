@@ -14,5 +14,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     Optional<Manager> findByEmailAndPasswordAndPartnerVerifyIsTrue(String email, String password);
 
+    Optional<Manager> findByIdAndPartnerVerifyIsTrue(Long id);
+
     Optional<Manager> findByEmail(String email);
 }
